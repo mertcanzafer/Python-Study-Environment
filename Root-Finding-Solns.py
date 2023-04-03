@@ -126,7 +126,7 @@ def Fixed_point_method(x0, tol, N, counter):
     return x1, counter
 
 
-# Critical variables for fixed points
+# Critical variables for fixed points.
 
 N = 20
 # We assume the initial value between 1 and 2
