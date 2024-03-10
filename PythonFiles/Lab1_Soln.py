@@ -24,23 +24,24 @@ n = int(input())
 Draw_Obj = ImageDraw.Draw(img)
 
 
+def RamdomNumberGenerator():
+    while (True):
+        # x0 and y0 Top left corner, x1 and y1 is bottom - right corner
+        x0 = random.randint(0, 511)
+        y0 = random.randint(0, 511)
+        x1 = random.randint(x0, 511)
+        y1 = random.randint(y0, 511)
+        # Interval condition
+        if (((x1 - x0) * (y1 - y0) > 10 * 10 and (x1 - x0) * (y1 - y0) < 200 * 200)):
+            break
+    return x0, y0, x1, y1
+
+
 def draw():
     # Iterate over n times to draw shapes
     for i in range(0, n):
         # generate coordinates of rectangles randomly
-        x0 = random.randint(0, 511)
-        y0 = random.randint(0, 511)
-
-        if (x0 == 511 or y0 == 511):
-            raise ("Invalid bound error occured!!")
-
-        x1 = random.randint(x0, 511)
-        y1 = random.randint(y0, 511)
-
-        # Condition 1
-        if ((x1 - x0) * (y1 - y0) < 10 * 10 or (x1 - x0) * (y1 - y0) > 200 * 200):
-            raise ("Conditions shoud satisfy the rules!!!")
-
+        x0, y0, x1, y1 = RamdomNumberGenerator()
         # draw the rectangle
         Cbounds = (x0, y0, x1, y1)
         #  Condition 2 generate Color intensity randomly
