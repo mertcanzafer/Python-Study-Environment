@@ -7,25 +7,32 @@ original = original.convert('L')
 
 PixelVals = list(original.getdata())
 
-maxVal = max(PixelVals)
-minVal = min(PixelVals)
-pixel_counts = [0] * (maxVal + 1)
+aHigh = max(PixelVals)
+aLow = min(PixelVals)
+pixel_counts = [0] * (aHigh + 1)
 for val in PixelVals:
     pixel_counts[val] += 1
 
 # Calculate cumulative distribution function (CDF)
-cdf = [0] * (maxVal + 1)
+cdf = [0] * (aHigh + 1)
 sum = 0
-for i in range(maxVal + 1):
+for i in range(aHigh + 1):
     sum += pixel_counts[i]
     cdf[i] = sum
 
 total_pixels = len(PixelVals)
 normalized_cdf = [cdf_val / total_pixels for cdf_val in cdf]
 
+sLow = 120
+sHigh = 220  # Use the maximum pixel value for grayscale images
 
-equalized_pixels = [round(normalized_cdf[val] * maxVal)
-                    for val in PixelVals]
+newCdf = [
+    round(((cdf_val - min(normalized_cdf)) /
+          (1 - min(normalized_cdf))) * (sHigh - sLow) + sLow)
+    for cdf_val in normalized_cdf
+]
+
+equalized_pixels = [newCdf[val] for val in PixelVals]
 
 equalized_image = Image.new('L', original.size)
 equalized_image.putdata(equalized_pixels)
