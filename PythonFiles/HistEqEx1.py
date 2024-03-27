@@ -1,43 +1,94 @@
 from PIL import Image
+import matplotlib.pyplot as plt
 
 original = Image.open("PythonFiles/tiger.jpg")
-
 original.show()
 original = original.convert('L')
 
 PixelVals = list(original.getdata())
 
-aHigh = max(PixelVals)
-aLow = min(PixelVals)
-pixel_counts = [0] * (aHigh + 1)
-for val in PixelVals:
-    pixel_counts[val] += 1
+width, height = original.size
 
-# Calculate cumulative distribution function (CDF)
-cdf = [0] * (aHigh + 1)
-sum = 0
-for i in range(aHigh + 1):
-    sum += pixel_counts[i]
-    cdf[i] = sum
+totalPixels = width * height
 
-total_pixels = len(PixelVals)
-normalized_cdf = [cdf_val / total_pixels for cdf_val in cdf]
+plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+plt.hist(PixelVals, bins=256, color='black', alpha=0.7)
+plt.title('Histogram of Original Image')
+plt.xlabel('Pixel Value')
+plt.ylabel('Frequency')
 
-sLow = 120
-sHigh = 220  # Use the maximum pixel value for grayscale images
+# Perform histogram equalization
+equalized_pixels = list(original.histogram())
 
-d = max(normalized_cdf)
-c = min(normalized_cdf)
+# Calculate and plot histogram for the equalized image
+plt.subplot(1, 2, 2)
+plt.hist(equalized_pixels, bins=256, color='black', alpha=0.7)
+plt.title('Histogram of Equalized Image')
+plt.xlabel('Pixel Value')
+plt.ylabel('Frequency')
 
-newCdf = [
-    round(((cdf_val - c) /
-          (d - c)) * (sHigh - sLow) + sLow)
-    for cdf_val in normalized_cdf
-]
+# Show the histograms
+plt.tight_layout()
+plt.show()
 
-equalized_pixels = [newCdf[val] for val in PixelVals]
+h = list(original.histogram())
 
-equalized_image = Image.new('L', original.size)
-equalized_image.putdata(equalized_pixels)
+aMin = 0
+aMax = 255
+alow = 0
+ahigh = 0
+slow = 0.05
+shigh = 1 - slow
 
-equalized_image.show()
+for i in h:
+    if (i >= totalPixels * slow):
+        alow = min(i)
+    else:
+        ahigh = max(i)
+
+for a in h:
+    if (a > alow and a < ahigh):
+        a = (((a - alow) / (ahigh - alow)) * (aMax - aMin)) + aMin
+    elif (alow >= a):
+        a = aMin
+    elif (a >= ahigh):
+        a = aMax
+
+# aMin = 0
+# aMax = 255
+# alow = 0
+# ahigh = 0
+# slow = 0.05
+# shigh = 1 - slow
+
+# for i in equalized_pixels:
+#     if (i >= totalPixels * slow):
+#         alow = min(i)
+#     else:
+#         ahigh = max(i)
+
+# for a in equalized_pixels:
+#     if (a > alow and a < ahigh):
+#         a = (((a - alow) / (ahigh - alow)) * (aMax - aMin)) + aMin
+#     elif (alow >= a):
+#         a = aMin
+#     elif (a >= ahigh):
+#         a = aMax
+
+# plt.figure(figsize=(12, 6))
+# plt.subplot(1, 2, 1)
+# plt.hist(PixelVals, bins=256, color='black', alpha=0.7)
+# plt.title('Histogram of Original Image')
+# plt.xlabel('Pixel Value')
+# plt.ylabel('Frequency')
+
+# plt.subplot(1, 2, 2)
+# plt.hist(equalized_pixels, bins=256, color='black', alpha=0.7)
+# plt.title('Histogram of Equalized Image')
+# plt.xlabel('Pixel Value')
+# plt.ylabel('Frequency')
+
+# # Show the histograms
+# plt.tight_layout()
+# plt.show()
