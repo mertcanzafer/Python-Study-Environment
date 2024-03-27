@@ -26,9 +26,12 @@ normalized_cdf = [cdf_val / total_pixels for cdf_val in cdf]
 sLow = 120
 sHigh = 220  # Use the maximum pixel value for grayscale images
 
+d = max(normalized_cdf)
+c = min(normalized_cdf)
+
 newCdf = [
-    round(((cdf_val - min(normalized_cdf)) /
-          (1 - min(normalized_cdf))) * (sHigh - sLow) + sLow)
+    round(((cdf_val - c) /
+          (d - c)) * (sHigh - sLow) + sLow)
     for cdf_val in normalized_cdf
 ]
 
