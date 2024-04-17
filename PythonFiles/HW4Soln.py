@@ -157,8 +157,10 @@ def main():
     # Resize the image
     image_1, image_2 = Filter.resize_image()
 
+    # Show the restored image
     cv2.imshow("Restored Image", image)
-
+    
+    # Save the image
     cv2.imwrite(r"PythonFiles\restored_img.jpg", image)
 
     if cv2.waitKey(0) & 0xFF == ord('q'):
