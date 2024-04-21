@@ -159,7 +159,7 @@ def main():
 
     # Show the restored image
     cv2.imshow("Restored Image", image)
-    
+
     # Save the image
     cv2.imwrite(r"PythonFiles\restored_img.jpg", image)
 
